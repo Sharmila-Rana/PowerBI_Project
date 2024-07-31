@@ -1,0 +1,27 @@
+-- TCL
+create table dummy1(id int);
+insert into dummy1 values(1),(2);
+select* from dummy1;
+start transaction;
+insert into dummy1 values(3),(4);
+rollback;
+commit;
+start transaction;
+insert into dummy1 values(5),(6);
+savepoint s1 ;
+insert into dummy1 values(7),(8);
+savepoint s2;
+insert into dummy1 value(9),(10);
+rollback to s2;
+rollback to s1;
+rollback;
+start transaction;
+insert into dummy1 values(5),(6);
+savepoint s1;
+set sql_safe_updates=0;
+update dummy1 set id=7 where id=5;
+savepoint s2;
+delete from dummy1 where id=6;
+rollback  to s2;
+rollback to s1;
+rollback;
